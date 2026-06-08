@@ -1,0 +1,10 @@
+# requirements_deploy.txt
+# Minimal dependencies for HuggingFace Spaces deployment
+# These are intentionally lighter than the full requirements.txt
+# The Spaces CPU environment does not need nibabel/scikit-image training deps
+
+torch==2.2.2
+torchvision==0.17.2
+numpy==1.26.4
+Pillow==10.3.0
+gradio==4.36.1

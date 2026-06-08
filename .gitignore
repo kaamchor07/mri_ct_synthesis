@@ -1,0 +1,73 @@
+# .gitignore
+# MRI → CT Synthesis Project — Git ignore rules
+
+# ── Python ─────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.pyo
+*.pyw
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+*.whl
+.eggs/
+
+# ── Virtual Environments ───────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# ── Jupyter ────────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb~
+
+# ── Model Checkpoints (can be large — store separately or use DVC) ────────────
+checkpoints/
+# To track a specific checkpoint, use: git add -f checkpoints/model.pth
+
+# ── Outputs & Generated Figures ───────────────────────────────────────────────
+outputs/
+# To commit specific figures: git add -f outputs/eval_grid.png
+
+# ── Raw Data (NIfTI volumes can be several GB) ────────────────────────────────
+data/*.nii.gz
+data/*.nii
+data/brain/
+data/pelvis/
+data/**/*.nii.gz
+data/**/*.nii
+# Keep the README inside data/
+!data/README.md
+
+# ── Training Logs (CSV) ───────────────────────────────────────────────────────
+# Un-comment to track logs in git:
+# !outputs/*.csv
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── OS ─────────────────────────────────────────────────────────────────────────
+*.bak
+*.tmp
+*.log
+*.pid
+
+# ── HuggingFace Spaces cache ─────────────────────────────────────────────────
+.gradio/
+flagged/
