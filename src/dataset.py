@@ -52,8 +52,11 @@ BACKGROUND_THRESHOLD: float = 0.95  # Skip slice if this fraction is background
 BACKGROUND_VALUE: float = 0.02  # Pixels below this (post-norm) are "background"
 
 # SynthRAD2023 may name the MRI file differently — we check both
-MRI_FILENAMES: Tuple[str, ...] = ("mr.nii.gz", "mri.nii.gz", "t1.nii.gz")
-CT_FILENAME: str = "ct.nii.gz"
+MRI_FILENAMES: Tuple[str, ...] = (
+    "mr.nii.gz", "mri.nii.gz", "t1.nii.gz",
+    "mr.nii", "mri.nii", "t1.nii"
+)
+CT_FILENAMES: Tuple[str, ...] = ("ct.nii.gz", "ct.nii")
 
 # Dataset split ratios (must sum to 1.0)
 TRAIN_RATIO: float = 0.70
@@ -71,7 +74,7 @@ def _find_patient_dirs(data_root: Path) -> List[Path]:
     """
     Recursively discover all patient directories that contain a CT file.
 
-    A patient directory is any leaf folder that contains ``ct.nii.gz``.
+    A patient directory is any leaf folder that contains a CT NIfTI file (e.g. ct.nii.gz or ct.nii).
 
     Args:
         data_root: Root of the dataset (e.g. ``data/brain/``).
@@ -79,12 +82,12 @@ def _find_patient_dirs(data_root: Path) -> List[Path]:
     Returns:
         Sorted list of Path objects, one per patient.
     """
-    patient_dirs = sorted([
-        p.parent
-        for p in data_root.rglob(CT_FILENAME)
-    ])
+    patient_dirs = set()
+    for ct_name in CT_FILENAMES:
+        for p in data_root.rglob(ct_name):
+            patient_dirs.add(p.parent)
     logger.info("Found %d patient directories under %s", len(patient_dirs), data_root)
-    return patient_dirs
+    return sorted(list(patient_dirs))
 
 
 def _find_mri_file(patient_dir: Path) -> Optional[Path]:
@@ -100,6 +103,25 @@ def _find_mri_file(patient_dir: Path) -> Optional[Path]:
         Path to the MRI file, or None if not found.
     """
     for name in MRI_FILENAMES:
+        candidate = patient_dir / name
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def _find_ct_file(patient_dir: Path) -> Optional[Path]:
+    """
+    Find the CT NIfTI file inside a patient directory.
+
+    Checks CT_FILENAMES in order and returns the first match.
+
+    Args:
+        patient_dir: Path to a single patient folder.
+
+    Returns:
+        Path to the CT file, or None if not found.
+    """
+    for name in CT_FILENAMES:
         candidate = patient_dir / name
         if candidate.exists():
             return candidate
@@ -166,13 +188,13 @@ def _extract_slices_from_patient(
         Returns an empty list if MRI or CT file is missing.
     """
     mri_path = _find_mri_file(patient_dir)
-    ct_path = patient_dir / CT_FILENAME
+    ct_path = _find_ct_file(patient_dir)
 
     if mri_path is None:
         logger.warning("No MRI file found in %s — skipping patient.", patient_dir)
         return []
 
-    if not ct_path.exists():
+    if ct_path is None:
         logger.warning("No CT file found in %s — skipping patient.", patient_dir)
         return []
 
@@ -248,7 +270,7 @@ class MRICTDataset(Dataset):
         all_patients = _find_patient_dirs(self.data_root)
         if len(all_patients) == 0:
             raise FileNotFoundError(
-                f"No patient directories with '{CT_FILENAME}' found under {self.data_root}. "
+                f"No patient directories with CT scans found under {self.data_root}. "
                 "Please follow data/README.md to download the SynthRAD2023 dataset."
             )
 
