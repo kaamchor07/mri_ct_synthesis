@@ -265,6 +265,63 @@ def append_csv_log(csv_path: Path, epoch: int, train_loss: float, val_loss: floa
         writer.writerow([epoch, f"{train_loss:.6f}", f"{val_loss:.6f}"])
 
 
+def save_loss_plot(csv_path: Path, plot_path: Path) -> None:
+    """
+    Read training log CSV and plot loss curves using standard csv reader.
+    """
+    try:
+        import matplotlib
+        matplotlib.use("Agg")  # Prevent GUI window generation
+        import matplotlib.pyplot as plt
+        
+        epochs = []
+        g_loss = []
+        d_loss = []
+        val_l1 = []
+        train_l1 = []
+        
+        is_pix2pix = False
+        
+        with open(csv_path, "r") as f:
+            reader = csv.reader(f)
+            header = next(reader)
+            if "G_loss" in header:
+                is_pix2pix = True
+            
+            for row in reader:
+                if not row:
+                    continue
+                epochs.append(int(row[0]))
+                if is_pix2pix:
+                    g_loss.append(float(row[1]))
+                    d_loss.append(float(row[2]))
+                    val_l1.append(float(row[3]))
+                else:
+                    train_l1.append(float(row[1]))
+                    val_l1.append(float(row[2]))
+                    
+        fig, ax = plt.subplots(figsize=(10, 5))
+        if is_pix2pix:
+            ax.plot(epochs, g_loss, label="Generator Loss (BCE + L1)", color="blue")
+            ax.plot(epochs, d_loss, label="Discriminator Loss (BCE)", color="red")
+            ax.plot(epochs, val_l1, label="Val L1 Loss (Reconstruction)", color="green")
+        else:
+            ax.plot(epochs, train_l1, label="Train L1 Loss", color="blue")
+            ax.plot(epochs, val_l1, label="Val L1 Loss", color="green")
+            
+        ax.set_xlabel("Epoch")
+        ax.set_ylabel("Loss")
+        ax.set_title("Training and Validation Curves")
+        ax.legend()
+        ax.grid(True, linestyle="--", alpha=0.7)
+        
+        plot_path.parent.mkdir(parents=True, exist_ok=True)
+        plt.savefig(plot_path, bbox_inches="tight", dpi=150)
+        plt.close(fig)
+    except Exception as e:
+        logger.warning("Could not generate loss plot: %s", e)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Main training entry point
 # ─────────────────────────────────────────────────────────────────────────────
@@ -325,6 +382,7 @@ def main() -> None:
 
         # Write to CSV log every epoch
         append_csv_log(csv_path, epoch, train_loss, val_loss)
+        save_loss_plot(csv_path, OUTPUT_DIR / "unet_loss_curve.png")
 
         # Print human-readable summary to stdout (visible in terminal)
         print(
