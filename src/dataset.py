@@ -32,7 +32,7 @@ automatically — see MRI_FILENAMES below.
 import logging
 import random
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import nibabel as nib
 import numpy as np
@@ -304,10 +304,6 @@ class MRICTDataset(Dataset):
         ct_tensor = torch.from_numpy(ct_slice).unsqueeze(0)    # (1, 256, 256)
 
         return mri_tensor, ct_tensor
-
-
-# We need Union for Python 3.9 compatibility
-from typing import Union  # noqa: E402 — must be after dataset class to avoid circular ref
 
 
 # ─────────────────────────────────────────────────────────────────────────────
