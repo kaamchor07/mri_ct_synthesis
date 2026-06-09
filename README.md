@@ -3,9 +3,11 @@
 > **Deep learning cross-modality image translation**: given a 2D brain MRI slice,
 > synthesize a realistic CT slice — enabling radiation-free radiotherapy planning.
 
+[![🤗 Live Demo](https://img.shields.io/badge/🤗%20HuggingFace-Live%20Demo-FFD21E?style=for-the-badge)](https://huggingface.co/spaces/kaamchor07/mri-ct-synthesis)
+
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.2-EE4C2C?logo=pytorch)](https://pytorch.org)
-[![Gradio](https://img.shields.io/badge/Gradio-4.36-orange?logo=gradio)](https://gradio.app)
+[![Gradio](https://img.shields.io/badge/Gradio-5.x-orange?logo=gradio)](https://gradio.app)
 [![Trained on](https://img.shields.io/badge/Trained%20on-Kaggle%20T4%20GPU-20BEFF?logo=kaggle)](https://kaggle.com)
 [![Dataset](https://img.shields.io/badge/Dataset-SynthRAD2023-blueviolet)](https://synthrad2023.grand-challenge.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
@@ -197,13 +199,17 @@ python src/evaluate.py --checkpoint checkpoints/pix2pix_best.pth --model pix2pix
 
 Outputs: `outputs/eval_grid.png` · `outputs/failure_cases.png`
 
-### 5. Run the Gradio demo
+### 🎬 Demo
+
+**Live demo** → [huggingface.co/spaces/kaamchor07/mri-ct-synthesis](https://huggingface.co/spaces/kaamchor07/mri-ct-synthesis)
+
+To run locally after training:
 
 ```powershell
 python app/app.py --checkpoint checkpoints/pix2pix_best.pth
 ```
 
-Open `http://localhost:7860` — upload a brain MRI PNG to get a synthetic CT.
+Open `http://localhost:7860` in your browser. Upload any brain MRI PNG/JPG to get the synthetic CT.
 
 ---
 

@@ -74,6 +74,10 @@ def parse_args() -> argparse.Namespace:
         "--port", type=int, default=7860,
         help="Local port to serve the Gradio app.",
     )
+    parser.add_argument(
+        "--host", type=str, default="127.0.0.1",
+        help="IP address to bind the server to (use 0.0.0.0 for Docker).",
+    )
     # Gradio injects extra args in Spaces — ignore unknown args gracefully
     args, _ = parser.parse_known_args()
     return args
@@ -284,7 +288,6 @@ def build_interface(checkpoint_path: str) -> gr.Blocks:
                 input_img = gr.Image(
                     label="🔬 MRI Input (upload PNG or JPG)",
                     type="pil",
-                    image_mode="L",
                 )
                 submit_btn = gr.Button("Generate Synthetic CT ⚡", variant="primary")
 
@@ -292,7 +295,6 @@ def build_interface(checkpoint_path: str) -> gr.Blocks:
                 output_img = gr.Image(
                     label="🩻 Synthetic CT Output",
                     type="pil",
-                    image_mode="L",
                 )
 
         gr.Markdown(
@@ -328,4 +330,4 @@ def build_interface(checkpoint_path: str) -> gr.Blocks:
 if __name__ == "__main__":
     args = parse_args()
     demo = build_interface(checkpoint_path=args.checkpoint)
-    demo.launch(server_port=args.port, share=False)
+    demo.launch(server_name=args.host, server_port=args.port, share=False)
