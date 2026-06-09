@@ -36,6 +36,12 @@ checkpoints/
 outputs/
 # To commit specific figures: git add -f outputs/eval_grid.png
 
+# ── Docs / Results (kept in git for README embedding) ─────────────────────────
+!docs/
+!docs/results/
+!docs/results/*.png
+!docs/results/*.jpg
+
 # ── Raw Data (NIfTI volumes can be several GB) ────────────────────────────────
 data/*.nii.gz
 data/*.nii
