@@ -72,9 +72,10 @@ RANDOM_SEED: int = 42
 
 def _find_patient_dirs(data_root: Path) -> List[Path]:
     """
-    Recursively discover all patient directories that contain a CT file.
+    Discover all patient directories that contain a CT file.
 
-    A patient directory is any leaf folder that contains a CT NIfTI file (e.g. ct.nii.gz or ct.nii).
+    A patient directory is any folder directly inside data_root that 
+    contains a CT NIfTI file (e.g. ct.nii.gz or ct.nii).
 
     Args:
         data_root: Root of the dataset (e.g. ``data/brain/``).
@@ -84,7 +85,7 @@ def _find_patient_dirs(data_root: Path) -> List[Path]:
     """
     patient_dirs = set()
     for ct_name in CT_FILENAMES:
-        for p in data_root.rglob(ct_name):
+        for p in data_root.glob(f"*/{ct_name}"):
             patient_dirs.add(p.parent)
     logger.info("Found %d patient directories under %s", len(patient_dirs), data_root)
     return sorted(list(patient_dirs))
