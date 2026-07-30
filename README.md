@@ -3,7 +3,7 @@
 > **Deep learning cross-modality image translation**: given a 2D brain MRI slice,
 > synthesize a realistic CT slice — enabling radiation-free radiotherapy planning.
 
-[![🤗 Live Demo](https://img.shields.io/badge/🤗%20HuggingFace-Live%20Demo-FFD21E?style=for-the-badge)](https://huggingface.co/spaces/kaamchor07/mri-ct-synthesis)
+[![ Live Demo](https://img.shields.io/badge/🤗%20HuggingFace-Live%20Demo-FFD21E?style=for-the-badge)](https://huggingface.co/spaces/kaamchor07/mri-ct-synthesis)
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.2-EE4C2C?logo=pytorch)](https://pytorch.org)
@@ -14,7 +14,7 @@
 
 ---
 
-## 🧠 What & Why
+##  What & Why
 
 Traditional radiotherapy planning requires a **CT scan** to calculate radiation dose
 distributions — CT provides the tissue density / Hounsfield Unit (HU) maps that
@@ -35,7 +35,7 @@ This project demonstrates two architectures trained on the SynthRAD2023 brain da
 
 ---
 
-## 📊 Real Training Results (pix2pix — Brain, 25 Epochs)
+##  Real Training Results (pix2pix — Brain, 25 Epochs)
 
 > **Training hardware**: Kaggle Tesla T4 GPU (16 GB VRAM) · **Dataset**: SynthRAD2023 brain · **23,045 training slices from 125 patients**
 
@@ -62,7 +62,7 @@ This project demonstrates two architectures trained on the SynthRAD2023 brain da
 
 ---
 
-## 🖼️ Qualitative Results
+##  Qualitative Results
 
 ### Evaluation Grid — 5 Random Test Patients
 *Each row: MRI Input → Predicted sCT → Real CT → Absolute Error (HU)*
@@ -84,16 +84,16 @@ similar training examples near the top/bottom of the skull.
 
 ---
 
-## ⚠️ Domain Specialization Notice
+##  Domain Specialization Notice
 
 > **This model is trained exclusively on brain MRI → CT data from the SynthRAD2023 dataset.**
 
-### Brain scans ✅
+### Brain scans 
 The model was trained on **180 brain radiotherapy patients** (125 train / 27 val / 27 test)
 and performs well on axial brain slices. It correctly predicts skull bone density, brain
 parenchyma, CSF spaces, and cranial air cavities.
 
-### Pelvis / other body regions ⚠️
+### Pelvis / other body regions 
 The model will produce **incorrect and unreliable outputs** for pelvic or abdominal MRI.
 The pelvis has completely different anatomy (spine vertebrae, pelvic bowl, bladder,
 femoral heads) that the model has never seen during training.
@@ -104,7 +104,7 @@ average anatomy and will fail at both if mixed.
 
 ---
 
-## 🔬 Technical Architecture
+##  Technical Architecture
 
 ```
 MRI slice (1 × 256 × 256)
@@ -149,7 +149,7 @@ synthesize CT from MRI in general — a classic data leakage problem in medical 
 
 ---
 
-## 🚀 Run Locally
+##  Run Locally
 
 ### Prerequisites
 - Windows 10/11, Python 3.10+
@@ -199,7 +199,7 @@ python src/evaluate.py --checkpoint checkpoints/pix2pix_best.pth --model pix2pix
 
 Outputs: `outputs/eval_grid.png` · `outputs/failure_cases.png`
 
-### 🎬 Demo
+###  Demo
 
 **Live demo** → [huggingface.co/spaces/kaamchor07/mri-ct-synthesis](https://huggingface.co/spaces/kaamchor07/mri-ct-synthesis)
 
@@ -213,7 +213,7 @@ Open `http://localhost:7860` in your browser. Upload any brain MRI PNG/JPG to ge
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 mri_ct_synthesis/
@@ -242,14 +242,14 @@ mri_ct_synthesis/
 
 ---
 
-## ⚠️ Limitations & Ethics
+##  Limitations & Ethics
 
 - **Brain-only**: Trained on brain MRI/CT pairs. Will not generalize to pelvis, thorax, or other body regions.
 - **2D slice-by-slice**: No 3D volumetric consistency enforced across adjacent slices.
 - **Bone hallucination**: May generate plausible-looking but incorrect fine bone detail.
 - **MRI protocol dependency**: Tested on T1-weighted MRI only; other protocols (T2, FLAIR) may degrade performance.
 
-> **⛔ NOT a clinical tool.** This project has not been validated for medical use.
+> ** NOT a clinical tool.** This project has not been validated for medical use.
 > Synthetic CT images **may contain errors** that could lead to incorrect clinical decisions.
 > All outputs are for research and portfolio demonstration only.
 
@@ -257,7 +257,7 @@ Dataset: SynthRAD2023, credited to Thummerer et al. (2023), used under its resea
 
 ---
 
-## 📚 References
+##  References
 
 1. **U-Net**: Ronneberger et al. (2015). *U-net: Convolutional networks for biomedical image segmentation*. MICCAI. [arxiv:1505.04597](https://arxiv.org/abs/1505.04597)
 2. **pix2pix**: Isola et al. (2017). *Image-to-image translation with conditional adversarial networks*. CVPR. [arxiv:1611.07004](https://arxiv.org/abs/1611.07004)
